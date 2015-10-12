@@ -7,7 +7,7 @@ DB_host = "127.0.0.1"
 DB_user = "root"
 DB_pass = "root"
 DB_name = "py"
-
+used_id = []
 
 
 def gen_code(no_id):
@@ -26,12 +26,15 @@ cursor.execute(sql)
 
 for i in range(200):
     no_id = (int)(random.random()*10000)
+    while no_id in used_id:
+        no_id = (int)(random.random()*10000)
+    used_id.append(no_id) 
     code = gen_code(no_id)
-    sql = '''INSERT INTO `code`(`idx`,`code`) VALUES (%d,'%s')'''%(
+    sql = '''INSERT INTO `code`(`idx`,`code1`) VALUES (%d,'%s')'''%(
                 no_id, code)
     cursor.execute(sql)
-    sql = '''SELECT `idx` FROM `code` where `code`=''',code
+    sql = '''SELECT `idx` FROM `code` where (`code1`='{0}')'''.format(code)
     cursor.execute(sql)
-    af_id = cursor.fetchone()
+    af_id = cursor.fetchone()[0]
 
     print af_id,"\t",code
